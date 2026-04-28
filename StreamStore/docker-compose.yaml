@@ -1,0 +1,62 @@
+# 1. version
+# defines docker compose file format
+version: "3.8"
+
+# 2. service block
+# defines a service named kafka
+services:
+  kafka:
+    # 3. Image
+    image: confluentinc/cp-kafka:7.7.8
+    # 4. container
+    container_name: kafka
+    # 5. ports
+    ports:
+      - "9092:9092" # host port:container port
+
+    # 6. environment variables
+    environment:
+      KAFKA_KRAFT_MODE: 'true'  # enable kraft mode
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk" # unique identifier for kafka cluster
+      KAFKA_NODE_ID: 1 # id of this broker
+
+      # this container act as:
+      # broker: handles data(partitions, topic)
+      # controller: manages cluster metadata
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093 # defines controller nodes - node 1 running at kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+    # 7. Listeners
+      # internal listeners: kafka listens on:
+      # 9092 -> client communication
+      # 9093 -> controller communication
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092, CONTROLLER://0.0.0.0:9093
+
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092 #  address given to clients
+
+      # inter broker communication
+      # brokers communicate using plaintext protocol
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      # specifies which listener is used for controller role
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      # map each listener name to its security protocol , both uses plaintext (no encryption)
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+
+      # 8. Storage
+      # kafka stores: topics, partitions, logs inside container path
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+
+    # 9. Volumes (Data persistence)
+    # maps docker volume -> kafka data directory
+    # ensures data is not lost when container stops
+    volumes:
+      - kafka_kraft:/var/lib/kafka/data
+
+# 10. volume definition
+# creates a named docker volume
+# used to persist kafka data
+volumes:
+  kafka_kraft:
