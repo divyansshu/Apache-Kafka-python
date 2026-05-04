@@ -1,0 +1,5 @@
+{"user_id": 101, "action": "login", "ip_address": "192.168.1.10", "timestamp": 1714819200.0}
+{"user_id": 102, "action": "add_to_cart", "ip_address": "10.0.0.25", "timestamp": 1714819265.5}
+{"user_id": 103, "action": "purchase", "ip_address": "172.16.4.8", "timestamp": 1714819320.25}
+{"user_id": 104, "action": "checkout", "ip_address": "172.16.4.8", "timestamp": 1714819325.25}
+{"user_id": 104, "action": "Browsing", "ip_address": "172.12.4.8", "timestamp": 1714819323.25}
