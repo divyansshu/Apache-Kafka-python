@@ -9,7 +9,7 @@ import signal
 
 fake = Faker()
 
-TOPIC = 'raw-events'
+TOPIC = 'raw_events'
 config = {
     'bootstrap.servers':'localhost:9092'
 }
@@ -103,7 +103,7 @@ def main():
         key = event['src_ip']
         value = json.dumps(event)
 
-        p.produce(
+        producer.produce(
             topic=TOPIC,
             key = key.encode('utf-8'),
             value = value.encode('utf-8'),
